@@ -4,28 +4,58 @@ A clean, polished, production-quality full-stack technical assessment applicatio
 
 ---
 
-## 🌟 Overview
+## 🔑 Demo Admin Credentials
 
-The **Hotel Employee Management System** provides hotel administrators with an executive dashboard to oversee 24/7 hotel staff operations. Built with modern full-stack TypeScript technologies, it implements secure single-admin cookie authentication, normalized PostgreSQL database modeling, and structured relational reporting.
+For instant testing and evaluation during technical review, use the single-admin account:
 
----
+| Field | Value |
+| :--- | :--- |
+| **Admin Email** | `DevIsrael@gmail.com` |
+| **Password** | `@Isru4600` |
 
-## 📐 Architecture & Technology Stack
-
-### Backend (`/backend`)
-- **Node.js & Express.js**: RESTful API server with modular controllers, routes, and services.
-- **PostgreSQL & Prisma ORM**: Relational schema modeling Admin, Department, Role, Shift, Employee, and Attendance.
-- **Authentication**: Single-admin authentication using `bcryptjs` for password hashing and HTTP-Only signed cookies containing JWT tokens.
-- **Validation & Errors**: Input validation via `Zod` schemas and centralized Express error handling.
-
-### Frontend (`/frontend`)
-- **Next.js (App Router)**: Fast Server & Client React components using TypeScript.
-- **Styling**: Tailored Tailwind CSS, modern glassmorphism aesthetic, custom badges, and interactive modals.
-- **Icons & Client**: `lucide-react` icons and centralized `axios` instance with credentials support.
+> 💡 **Tip**: The login page at `http://localhost:3000/login` includes a single-click **"Autofill Credentials"** button that populates these credentials automatically.
 
 ---
 
-## 📂 Project Structure
+## 🎨 UI Design & Aesthetic Architecture
+
+The application was crafted with modern web design standards to deliver a sleek, executive-grade user experience:
+
+- **Color Palette & Contrast**:
+  - **Background**: Deep Slate (`#0f172a` / `#020617`) for login and sidebars to convey high-end resort elegance.
+  - **Primary Accent**: Warm Gold/Amber (`amber-500` / `#f59e0b`) representing hospitality excellence and active interactive states.
+  - **Status Badges**: Tailored, subtle HSL badge colors (Emerald for `PRESENT`/`ACTIVE`, Amber for `LATE`, Rose for `ABSENT`/`TERMINATED`, Blue for `LEAVE`/`ON_LEAVE`).
+- **Typography & Hierarchy**: Clean, crisp Sans-serif typography (`Inter` via Google Fonts) paired with monospace text for employee numbers (`EMP-1001`), times, and dates.
+- **Glassmorphism & Micro-Interactions**: Translucent backdrop blurs, soft card drop-shadows, and smooth hover state transitions.
+- **Responsive Layout**: Sidebar navigation with mobile-responsive collapses, full table scrolling, and pop-up modal dialogs for CRUD actions.
+
+---
+
+## 🛠️ Architecture & Key Technical Decisions
+
+### 1. Prisma 7 + `@prisma/adapter-pg` Database Layer
+- **Decision**: PostgreSQL with `@prisma/adapter-pg` pool adapter and Prisma ORM.
+- **Rationale**: Bypasses binary engine issues under Node v22 while ensuring high-performance database connection pooling.
+
+### 2. Modern TypeScript Execution Engine (`tsx`)
+- **Decision**: Replaced legacy `ts-node` with `tsx` (`tsx watch src/server.ts`).
+- **Rationale**: Node v22+ has compatibility constraints with `ts-node` module loaders. `tsx` uses Esbuild under the hood for instant startup and hot-reloading.
+
+### 3. Secure Single-Admin JWT Session Management
+- **Decision**: HttpOnly signed cookies with JWT payloads (`adminId`, `email`) and `bcryptjs` password hashing.
+- **Rationale**: Protects tokens from XSS vulnerabilities by keeping them out of `localStorage`. Includes automatic session refresh (`/api/auth/me`) on application mount.
+
+### 4. Non-Trivial Relational Analytics & Reporting
+- **Decision**: Server-side aggregation queries in `reportService.ts` and `dashboardService.ts`.
+- **Rationale**: Computes individual attendance rates (`(PRESENT + LATE) / totalDays * 100`) and department-level summaries over customizable date ranges.
+
+### 5. Input Validation & Robust Error Middleware
+- **Decision**: `Zod` schemas for request body parsing and custom `errorHandler` middleware.
+- **Rationale**: Guarantees type-safety at runtime and formats validation errors into clean user-facing API responses.
+
+---
+
+## 📁 Repository Structure
 
 ```
 Hotel_Employee_Management_System/
@@ -34,138 +64,150 @@ Hotel_Employee_Management_System/
 ├── backend/
 │   ├── .env
 │   ├── .env.example
+│   ├── package.json
+│   ├── tsconfig.json
 │   ├── prisma/
 │   │   ├── schema.prisma
 │   │   └── migrations/
 │   └── src/
-│       ├── app.ts
-│       ├── server.ts
-│       ├── seed.ts
-│       ├── controllers/
-│       ├── services/
-│       ├── routes/
-│       ├── middleware/
-│       ├── utils/
-│       └── lib/
+│       ├── app.ts                  # Express application setup & CORS
+│       ├── server.ts               # HTTP server listener
+│       ├── seed.ts                 # Database seeder script
+│       ├── controllers/            # Route request handlers
+│       ├── services/               # Business logic & database queries
+│       ├── routes/                 # Express API routing definitions
+│       ├── middleware/             # Auth check & error handler
+│       ├── utils/                  # JWT, validation, and Prisma errors
+│       └── lib/                    # Prisma client instantiation
 └── frontend/
     ├── .env.local
     ├── .env.example
+    ├── package.json
+    ├── tsconfig.json
     ├── app/
-    │   ├── layout.tsx
-    │   ├── page.tsx (Dashboard)
-    │   ├── login/page.tsx
-    │   ├── employees/page.tsx
-    │   ├── departments/page.tsx
-    │   ├── roles/page.tsx
-    │   ├── shifts/page.tsx
-    │   └── reports/page.tsx
+    │   ├── layout.tsx              # Root Next.js layout & AuthProvider wrapper
+    │   ├── page.tsx                # Executive Dashboard
+    │   ├── login/page.tsx          # Login Page with credentials autofill
+    │   ├── employees/page.tsx      # Staff directory & CRUD modals
+    │   ├── departments/page.tsx    # Hotel departments management
+    │   ├── roles/page.tsx          # Job designations management
+    │   ├── shifts/page.tsx         # 24/7 work shift management
+    │   └── reports/page.tsx        # Attendance analytics & reports
     └── src/
-        ├── components/
-        ├── context/
-        └── lib/api/
+        ├── components/             # Sidebar, Header, AppShell
+        ├── context/                # AuthContext & session state
+        └── lib/api/                # Centralized Axios client & API calls
 ```
 
 ---
 
-## 🔐 Environment Variables
+## ⚡ How to Run the Project
 
-### Backend (`backend/.env`)
-```env
-DATABASE_URL="postgresql://username:password@host:5432/database?sslmode=require"
-PORT=5000
-ADMIN_EMAIL="DevIsrael@gmail.com"
-ADMIN_PASSWORD="@Isru4600"
-JWT_SECRET="your-secure-jwt-secret-key"
-```
-
-> **Note**: A safe template with dummy placeholders is available in `backend/.env.example`.
-
-### Frontend (`frontend/.env.local`)
-```env
-NEXT_PUBLIC_API_URL="http://localhost:5000/api"
-```
+### Prerequisites
+- **Node.js**: v18+ (Tested on Node.js v22.16.0)
+- **npm**: v9+
+- **PostgreSQL**: Local database instance or PostgreSQL URL (e.g. Neon PostgreSQL)
 
 ---
 
-## 🚀 Quick Setup & Seeding
+### Step 1: Backend Setup
 
-### 1. Backend Setup & Seeding
-```bash
-cd backend
+1. Navigate to the backend directory:
+   ```bash
+   cd backend
+   ```
 
-# Install dependencies
-npm install
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-# Push database schema
-npx prisma db push
+3. Ensure `.env` is configured (refer to `backend/.env.example`):
+   ```env
+   DATABASE_URL="postgresql://username:password@host:5432/database?sslmode=require"
+   PORT=5000
+   ADMIN_EMAIL="DevIsrael@gmail.com"
+   ADMIN_PASSWORD="@Isru4600"
+   JWT_SECRET="@Israel2612"
+   CLIENT_ORIGIN="http://localhost:3000"
+   ```
 
-# Build TypeScript code
-npm run build
+4. Push database schema:
+   ```bash
+   npx prisma db push
+   ```
 
-# Seed admin and sample data (Departments, Roles, Shifts, Staff, Attendance)
-npm run prisma:seed
+5. Seed database with Admin user, Departments, Roles, Shifts, Employees, and Attendance:
+   ```bash
+   npm run prisma:seed
+   ```
 
-# Start backend dev server
-npm run dev
-```
-
-### 2. Frontend Setup
-```bash
-cd frontend
-
-# Install dependencies
-npm install
-
-# Run frontend dev server
-npm run dev
-```
-
-The application will be accessible at:
-- **Frontend App**: `http://localhost:3000`
-- **Backend API**: `http://localhost:5000/api`
-
----
-
-## 🔑 Demo Admin Login Credentials
-
-For quick evaluation during technical review, use the pre-configured admin account:
-
-| Field | Value |
-| :--- | :--- |
-| **Email** | `DevIsrael@gmail.com` |
-| **Password** | `@Isru4600` |
-
-*(An "Autofill Credentials" button is also provided directly on the Login page).*
+6. Start backend development server:
+   ```bash
+   npm run dev
+   ```
+   *The server will start on `http://localhost:5000`.*
 
 ---
 
-## ✨ Features & Non-Trivial Implementation Highlights
+### Step 2: Frontend Setup
 
-1. **Executive Dashboard**:
-   - Real-time aggregation of active staff, departments, job roles, and shifts.
-   - Live breakdown of today's attendance (Present, Late, Absent, On Leave).
+1. Open a new terminal and navigate to the frontend directory:
+   ```bash
+   cd frontend
+   ```
 
-2. **Employee Management**:
-   - Complete CRUD operations with pagination, search, department filtering, and status badges.
-   - Foreign key constraint checks to ensure database integrity.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-3. **Departments, Roles, and Shifts Management**:
-   - Full control over hotel unit organizational structures and 24/7 shift rotations.
+3. Ensure `.env.local` is present:
+   ```env
+   NEXT_PUBLIC_API_URL="http://localhost:5000/api"
+   ```
 
-4. **Attendance Tracking**:
-   - Daily log entry and updates for check-in/check-out times, status, and notes.
-
-5. **Advanced Relational Reports**:
-   - **Employee Attendance Summary**: Calculates total days recorded, individual attendance counts, and overall attendance rate percentages per employee.
-   - **Department Attendance Summary**: Aggregates unit-level attendance rates to identify top-performing hotel departments.
+4. Start frontend development server:
+   ```bash
+   npm run dev
+   ```
+   *The application will start on `http://localhost:3000`.*
 
 ---
 
-## 🧪 Verification & Build Status
+## 🔍 API Routes Overview
 
-- Backend compilation (`tsc`): **Passed**
-- Database migrations & push: **Passed**
-- Seeding script (`prisma:seed`): **Passed**
-- Frontend production build (`next build`): **Passed**
+| Method | Endpoint | Description | Auth Required |
+| :--- | :--- | :--- | :---: |
+| `GET` | `/health` | Server health check | No |
+| `POST` | `/api/auth/login` | Single-admin login & cookie issue | No |
+| `GET` | `/api/auth/me` | Current session details | Yes |
+| `POST` | `/api/auth/logout` | Session cookie clear | Yes |
+| `GET` | `/api/dashboard/summary` | Live KPI dashboard stats | Yes |
+| `GET` | `/api/employees` | List employees (search, filter, paginate) | Yes |
+| `POST` | `/api/employees` | Create employee | Yes |
+| `PUT` | `/api/employees/:id` | Update employee | Yes |
+| `DELETE` | `/api/employees/:id` | Delete employee | Yes |
+| `GET` | `/api/departments` | List hotel departments | Yes |
+| `POST` | `/api/departments` | Create department | Yes |
+| `GET` | `/api/roles` | List job roles | Yes |
+| `POST` | `/api/roles` | Create job role | Yes |
+| `GET` | `/api/shifts` | List work shifts | Yes |
+| `POST` | `/api/shifts` | Create work shift | Yes |
+| `GET` | `/api/attendance` | Attendance log entries | Yes |
+| `POST` | `/api/attendance` | Record attendance entry | Yes |
+| `GET` | `/api/reports/attendance-summary` | Relational employee attendance report | Yes |
+| `GET` | `/api/reports/department-attendance` | Relational department attendance report | Yes |
 
-© 2026 Grand Haven Hotel Management System.
+---
+
+## ✅ Verification Checklist
+
+- [x] Backend TypeScript compilation (`tsc`): **Passed**
+- [x] Database schema sync (`prisma db push`): **Passed**
+- [x] Seeding execution (`npm run prisma:seed`): **Passed**
+- [x] Backend dev server (`npm run dev` with `tsx`): **Running on port 5000**
+- [x] Frontend Next.js build (`npm run build`): **Passed**
+- [x] Frontend dev server (`npm run dev`): **Running on port 3000**
+
+© 2026 Grand Haven Hotel & Resort. Technical Assessment Delivery.

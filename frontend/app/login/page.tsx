@@ -51,8 +51,8 @@ export default function LoginPage() {
           <div className="w-16 h-16 bg-amber-500/15 border border-amber-500/30 rounded-2xl flex items-center justify-center mx-auto mb-4 text-amber-400 shadow-lg shadow-amber-500/10">
             <Hotel className="w-8 h-8" />
           </div>
-          <h1 className="text-2xl font-bold text-slate-50 tracking-tight">Grand Haven Resort</h1>
-          <p className="text-sm text-slate-400 mt-1">Employee Management System</p>
+          <h1 className="text-2xl font-bold text-slate-50 tracking-tight">Haile Resort</h1>
+          <p className="text-sm text-slate-400 mt-1">Hotel Employee Management System</p>
         </div>
 
         {/* Demo Credentials Quick Fill Banner */}
@@ -133,7 +133,7 @@ export default function LoginPage() {
       </div>
 
       <div className="mt-8 text-center text-xs text-slate-500">
-        © 2026 Grand Haven Hotel & Resort. Technical Assessment Delivery.
+        © 2026 Haile Resort. Technical Assessment Delivery.
       </div>
     </div>
   );

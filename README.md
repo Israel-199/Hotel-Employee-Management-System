@@ -199,4 +199,4 @@ Hotel_Employee_Management_System/
 - [x] Frontend Next.js build (`npm run build`): **Passed**
 - [x] Frontend dev server (`npm run dev`): **Running on port 3000**
 
-© 2026 Grand Haven Hotel & Resort. Technical Assessment Delivery.
+© 2026 Haile Resort. Technical Assessment Delivery.

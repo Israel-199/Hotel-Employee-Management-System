@@ -111,13 +111,13 @@ Hotel_Employee_Management_System/
    npm install
    ```
 
-3. Ensure `.env` is configured (refer to `backend/.env.example`):
+3. Ensure `.env` is configured with this credentials:                                                      COPY THIS TO .env FILE IN BACKEND FOLDER FOR EASILY ACCESSING THE SYSTEM
    ```env
-   DATABASE_URL="postgresql://username:password@host:5432/database?sslmode=require"
+   DATABASE_URL="postgresql://neondb_owner:npg_PksWJdND1L5K@ep-winter-sky-aylq1mjg-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
    PORT=5000
-   ADMIN_EMAIL="admin@example.com"
-   ADMIN_PASSWORD="your_admin_password"
-   JWT_SECRET="your_jwt_secret"
+   ADMIN_EMAIL="DevIsrael@gmail.com"
+   ADMIN_PASSWORD="@Isru4600"
+   JWT_SECRET="@Israel2612"
    CLIENT_ORIGIN="http://localhost:3000"
    ```
 

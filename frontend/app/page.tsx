@@ -79,7 +79,7 @@ export default function DashboardPage() {
         <div>
           <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Executive Dashboard</h1>
           <p className="text-sm text-slate-500 mt-1">
-            Real-time operations summary for Grand Haven Hotel staff and attendance.
+            Real-time operations summary for Haile Resort staff and attendance.
           </p>
         </div>
         <div className="flex items-center gap-3">

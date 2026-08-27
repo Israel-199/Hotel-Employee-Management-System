@@ -36,7 +36,7 @@ export function Sidebar() {
         </div>
         <div>
           <h1 className="font-bold text-base text-slate-50 tracking-tight leading-none">
-            Grand Haven
+            Haile Resort
           </h1>
           <span className="text-[11px] font-medium text-slate-400 tracking-wider uppercase">
             Employee Portal

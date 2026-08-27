@@ -4,18 +4,7 @@ A clean, polished, production-quality full-stack technical assessment applicatio
 
 ---
 
-## 🔑 Demo Admin Credentials
 
-For instant testing and evaluation during technical review, use the single-admin account:
-
-| Field | Value |
-| :--- | :--- |
-| **Admin Email** | `DevIsrael@gmail.com` |
-| **Password** | `@Isru4600` |
-
-> 💡 **Tip**: The login page at `http://localhost:3000/login` includes a single-click **"Autofill Credentials"** button that populates these credentials automatically.
-
----
 
 ## 🎨 UI Design & Aesthetic Architecture
 
@@ -126,9 +115,9 @@ Hotel_Employee_Management_System/
    ```env
    DATABASE_URL="postgresql://username:password@host:5432/database?sslmode=require"
    PORT=5000
-   ADMIN_EMAIL="DevIsrael@gmail.com"
-   ADMIN_PASSWORD="@Isru4600"
-   JWT_SECRET="@Israel2612"
+   ADMIN_EMAIL="admin@example.com"
+   ADMIN_PASSWORD="your_admin_password"
+   JWT_SECRET="your_jwt_secret"
    CLIENT_ORIGIN="http://localhost:3000"
    ```
 

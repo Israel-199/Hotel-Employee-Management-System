@@ -189,6 +189,11 @@ All API error responses follow a uniform JSON structure:
 
 3. **Configure Environment Variables (`.env`)**:
    Create or verify `.env` inside the `backend` folder:
+
+   For assessment purposes, use the provided .env file inside the backend folder. No additional environment configuration is required.
+
+   This is intentionally provided to make it easier for the evaluator to run and test the system without creating the environment variables manually.
+   
    ```env
    DATABASE_URL="postgresql://neondb_owner:npg_PksWJdND1L5K@ep-winter-sky-aylq1mjg-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
    PORT=5000

@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -10,4 +5,102 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  ON_LEAVE
+  TERMINATED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  LEAVE
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Department {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  employees   Employee[]
+}
+
+model Role {
+  id          String     @id @default(cuid())
+  name        String     @unique
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  employees   Employee[]
+}
+
+model Shift {
+  id          String     @id @default(cuid())
+  name        String
+  startTime   String
+  endTime     String
+  description String?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  employees   Employee[]
+}
+
+model Employee {
+  id             String         @id @default(cuid())
+  employeeNumber String         @unique
+  firstName      String
+  lastName       String
+  email          String         @unique
+  phone          String?
+  hireDate       DateTime       @db.Date
+  departmentId   String
+  roleId         String
+  shiftId        String
+  status         EmployeeStatus @default(ACTIVE)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  department Department   @relation(fields: [departmentId], references: [id], onDelete: Restrict)
+  role       Role         @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  shift      Shift        @relation(fields: [shiftId], references: [id], onDelete: Restrict)
+  attendance Attendance[]
+
+  @@index([employeeNumber])
+  @@index([email])
+  @@index([departmentId])
+  @@index([roleId])
+  @@index([shiftId])
+  @@index([status])
+}
+
+model Attendance {
+  id         String           @id @default(cuid())
+  employeeId String
+  date       DateTime         @db.Date
+  status     AttendanceStatus
+  checkIn    DateTime?
+  checkOut   DateTime?
+  notes      String?
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  employee Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeId, date])
+  @@index([employeeId])
+  @@index([date])
+  @@index([status])
 }

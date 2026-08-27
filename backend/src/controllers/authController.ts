@@ -38,7 +38,12 @@ export async function meHandler(req: AuthRequest, res: Response, next: NextFunct
 }
 
 export async function logoutHandler(_req: Request, res: Response): Promise<void> {
-  res.clearCookie(AUTH_COOKIE_NAME, getCookieOptions());
+  res.clearCookie(AUTH_COOKIE_NAME, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    path: "/",
+  });
   res.status(200).json({
     success: true,
     message: "Logged out successfully.",

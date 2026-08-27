@@ -12,8 +12,8 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false);
 
   const fillDemoCredentials = () => {
-    setEmail("DevIsrael@gmail.com");
-    setPassword("@Isru4600");
+    setEmail("admin@test.com");
+    setPassword("AssessmentPassword123!");
     setError(null);
   };
 
@@ -61,7 +61,7 @@ export default function LoginPage() {
           <div className="flex-1">
             <p className="font-semibold text-amber-300">Single-Admin Assessment Credentials</p>
             <p className="mt-0.5 text-[11px] text-slate-300">
-              Email: <code className="text-amber-200 font-mono">DevIsrael@gmail.com</code> | Password: <code className="text-amber-200 font-mono">@Isru4600</code>
+              Email: <code className="text-amber-200 font-mono">admin@test.com</code> | Password: <code className="text-amber-200 font-mono">AssessmentPassword123!</code>
             </p>
             <button
               type="button"

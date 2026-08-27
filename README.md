@@ -187,9 +187,9 @@ All API error responses follow a uniform JSON structure:
    ```env
    DATABASE_URL="postgresql://neondb_owner:npg_PksWJdND1L5K@ep-winter-sky-aylq1mjg-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
    PORT=5000
-   ADMIN_EMAIL="DevIsrael@gmail.com"
-   ADMIN_PASSWORD="@Isru4600"
-   JWT_SECRET="@Israel2612"
+   ADMIN_EMAIL="admin@test.com"
+   ADMIN_PASSWORD="AssessmentPassword123!"
+   JWT_SECRET="assessment-secret"
    CLIENT_ORIGIN="http://localhost:3000"
    ```
 
@@ -215,6 +215,11 @@ All API error responses follow a uniform JSON structure:
 
 1. **Open a new terminal and navigate to frontend**:
    ```bash
+   cd Hotel-Employee-Management-System-main
+   ```
+   Then
+
+   ```bash
    cd frontend
    ```
 
@@ -234,13 +239,6 @@ All API error responses follow a uniform JSON structure:
    npm run dev
    ```
    *The client app runs on `http://localhost:3000`.*
-
----
-
-## 🔐 Credentials for Login
-
-- **Email**: `DevIsrael@gmail.com`
-- **Password**: `@Isru4600`
 
 ---
 

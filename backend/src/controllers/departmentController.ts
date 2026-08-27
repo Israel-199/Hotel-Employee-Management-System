@@ -30,7 +30,7 @@ export async function getDepartmentHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const department = await getDepartmentById(req.params.id);
+    const department = await getDepartmentById(req.params.id as string);
     res.status(200).json({
       success: true,
       data: department,
@@ -63,7 +63,7 @@ export async function updateDepartmentHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const updated = await updateDepartment(req.params.id, req.body);
+    const updated = await updateDepartment(req.params.id as string, req.body);
     res.status(200).json({
       success: true,
       data: updated,
@@ -79,7 +79,7 @@ export async function deleteDepartmentHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    await deleteDepartment(req.params.id);
+    await deleteDepartment(req.params.id as string);
     res.status(200).json({
       success: true,
       message: "Department deleted successfully.",

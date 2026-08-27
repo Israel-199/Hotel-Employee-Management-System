@@ -54,7 +54,7 @@ export async function getEmployeeHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const employee = await getEmployeeById(req.params.id);
+    const employee = await getEmployeeById(req.params.id as string);
     res.status(200).json({
       success: true,
       data: employee,
@@ -87,7 +87,7 @@ export async function updateEmployeeHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const updated = await updateEmployee(req.params.id, req.body);
+    const updated = await updateEmployee(req.params.id as string, req.body);
     res.status(200).json({
       success: true,
       data: updated,
@@ -103,7 +103,7 @@ export async function deleteEmployeeHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    await deleteEmployee(req.params.id);
+    await deleteEmployee(req.params.id as string);
     res.status(200).json({
       success: true,
       message: "Employee deleted successfully.",

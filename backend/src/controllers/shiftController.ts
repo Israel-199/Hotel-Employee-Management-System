@@ -30,7 +30,7 @@ export async function getShiftHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const shift = await getShiftById(req.params.id);
+    const shift = await getShiftById(req.params.id as string);
     res.status(200).json({
       success: true,
       data: shift,
@@ -63,7 +63,7 @@ export async function updateShiftHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const updated = await updateShift(req.params.id, req.body);
+    const updated = await updateShift(req.params.id as string, req.body);
     res.status(200).json({
       success: true,
       data: updated,
@@ -79,7 +79,7 @@ export async function deleteShiftHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    await deleteShift(req.params.id);
+    await deleteShift(req.params.id as string);
     res.status(200).json({
       success: true,
       message: "Shift deleted successfully.",

@@ -54,7 +54,7 @@ export async function getAttendanceHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const record = await getAttendanceById(req.params.id);
+    const record = await getAttendanceById(req.params.id as string);
     res.status(200).json({
       success: true,
       data: record,
@@ -87,7 +87,7 @@ export async function updateAttendanceHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const updated = await updateAttendance(req.params.id, req.body);
+    const updated = await updateAttendance(req.params.id as string, req.body);
     res.status(200).json({
       success: true,
       data: updated,
@@ -103,7 +103,7 @@ export async function deleteAttendanceHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    await deleteAttendance(req.params.id);
+    await deleteAttendance(req.params.id as string);
     res.status(200).json({
       success: true,
       message: "Attendance record deleted successfully.",

@@ -30,7 +30,7 @@ export async function getRoleHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const role = await getRoleById(req.params.id);
+    const role = await getRoleById(req.params.id as string);
     res.status(200).json({
       success: true,
       data: role,
@@ -63,7 +63,7 @@ export async function updateRoleHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const updated = await updateRole(req.params.id, req.body);
+    const updated = await updateRole(req.params.id as string, req.body);
     res.status(200).json({
       success: true,
       data: updated,
@@ -79,7 +79,7 @@ export async function deleteRoleHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    await deleteRole(req.params.id);
+    await deleteRole(req.params.id as string);
     res.status(200).json({
       success: true,
       message: "Role deleted successfully.",

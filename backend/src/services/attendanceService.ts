@@ -1,7 +1,7 @@
 import { prisma } from "../lib/prisma";
 import { AppError } from "../utils/AppError";
 import { parseDateOnly } from "../utils/prismaErrors";
-import { AttendanceStatus } from "../../generated/prisma/client";
+import { AttendanceStatus } from "@prisma/client";
 
 const attendanceInclude = {
   employee: {

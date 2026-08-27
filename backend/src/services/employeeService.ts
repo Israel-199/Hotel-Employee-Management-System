@@ -1,7 +1,7 @@
 import { prisma } from "../lib/prisma";
 import { AppError } from "../utils/AppError";
 import { parseDateOnly } from "../utils/prismaErrors";
-import { EmployeeStatus } from "../../generated/prisma/client";
+import { EmployeeStatus } from "@prisma/client";
 
 const employeeInclude = {
   department: { select: { id: true, name: true } },

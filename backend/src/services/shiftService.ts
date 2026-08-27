@@ -54,14 +54,30 @@ export async function updateShift(
     description: string | null;
   }>
 ) {
-  await getShiftById(id);
+  const existing = await prisma.shift.findUnique({ where: { id } });
+  if (!existing) throw new AppError("Shift not found.", 404);
+
+  let hasChanges = false;
+  if (data.name !== undefined && data.name !== existing.name) hasChanges = true;
+  if (data.startTime !== undefined && data.startTime !== existing.startTime) hasChanges = true;
+  if (data.endTime !== undefined && data.endTime !== existing.endTime) hasChanges = true;
+  if (
+    data.description !== undefined &&
+    (data.description ?? null) !== (existing.description ?? null)
+  ) {
+    hasChanges = true;
+  }
+
+  if (!hasChanges) {
+    throw new AppError("No changes were made.", 400);
+  }
+
   return prisma.shift.update({ where: { id }, data });
 }
 
 export async function deleteShift(id: string) {
-  await getShiftById(id);
-  const count = await prisma.employee.count({ where: { shiftId: id } });
-  if (count > 0) {
+  const shift = await getShiftById(id);
+  if (shift.employeeCount > 0) {
     throw new AppError("Cannot delete shift with assigned employees.", 409);
   }
   await prisma.shift.delete({ where: { id } });

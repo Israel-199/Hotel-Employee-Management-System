@@ -30,7 +30,6 @@ export function optionalAuth(req: AuthRequest, _res: Response, next: NextFunctio
       const payload = verifyToken(token);
       req.admin = { id: payload.adminId, email: payload.email };
     } catch {
-      // ignore invalid token for optional auth
     }
   }
   next();

@@ -1,5 +1,6 @@
 import { prisma } from "../lib/prisma";
 import { parseDateOnly } from "../utils/prismaErrors";
+import { AppError } from "../utils/AppError";
 
 export interface AttendanceReportFilter {
   startDate?: string;
@@ -7,18 +8,39 @@ export interface AttendanceReportFilter {
   departmentId?: string;
 }
 
-export async function getEmployeeAttendanceReport(filter: AttendanceReportFilter) {
+function parseAndValidateDateRange(startDate?: string, endDate?: string) {
   const dateWhere: Record<string, unknown> = {};
-  if (filter.startDate) {
-    dateWhere.gte = parseDateOnly(filter.startDate);
+  let startParsed: Date | undefined;
+  let endParsed: Date | undefined;
+
+  if (startDate && startDate.trim()) {
+    startParsed = parseDateOnly(startDate.trim());
+    dateWhere.gte = startParsed;
   }
-  if (filter.endDate) {
-    dateWhere.lte = parseDateOnly(filter.endDate);
+  if (endDate && endDate.trim()) {
+    endParsed = parseDateOnly(endDate.trim());
+    dateWhere.lte = endParsed;
   }
 
+  if (startParsed && endParsed && startParsed.getTime() > endParsed.getTime()) {
+    throw new AppError("Start date cannot be after end date.", 400);
+  }
+
+  return dateWhere;
+}
+
+export async function getEmployeeAttendanceReport(filter: AttendanceReportFilter) {
+  const dateWhere = parseAndValidateDateRange(filter.startDate, filter.endDate);
+
   const employeeWhere: Record<string, unknown> = {};
-  if (filter.departmentId) {
-    employeeWhere.departmentId = filter.departmentId;
+  if (filter.departmentId && filter.departmentId.trim()) {
+    const deptExists = await prisma.department.findUnique({
+      where: { id: filter.departmentId.trim() },
+    });
+    if (!deptExists) {
+      throw new AppError("Department not found.", 404);
+    }
+    employeeWhere.departmentId = filter.departmentId.trim();
   }
 
   const employees = await prisma.employee.findMany({
@@ -90,13 +112,7 @@ export async function getEmployeeAttendanceReport(filter: AttendanceReportFilter
 }
 
 export async function getDepartmentAttendanceReport(filter: AttendanceReportFilter) {
-  const dateWhere: Record<string, unknown> = {};
-  if (filter.startDate) {
-    dateWhere.gte = parseDateOnly(filter.startDate);
-  }
-  if (filter.endDate) {
-    dateWhere.lte = parseDateOnly(filter.endDate);
-  }
+  const dateWhere = parseAndValidateDateRange(filter.startDate, filter.endDate);
 
   const departments = await prisma.department.findMany({
     select: {

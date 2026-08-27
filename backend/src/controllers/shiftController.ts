@@ -63,7 +63,8 @@ export async function updateShiftHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const updated = await updateShift(req.params.id as string, req.body);
+    const validatedData = shiftSchema.partial().parse(req.body);
+    const updated = await updateShift(req.params.id as string, validatedData);
     res.status(200).json({
       success: true,
       data: updated,

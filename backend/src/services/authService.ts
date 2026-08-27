@@ -5,8 +5,8 @@ import { signToken } from "../utils/jwt";
 
 export async function loginAdmin(email: string, password: string) {
   const normalizedEmail = email.trim().toLowerCase();
-  const admin = await prisma.admin.findFirst({
-    where: { email: { equals: normalizedEmail, mode: "insensitive" } },
+  const admin = await prisma.admin.findUnique({
+    where: { email: normalizedEmail },
   });
 
   if (!admin) {
@@ -34,16 +34,12 @@ export async function getAdminById(id: string) {
 }
 
 export async function seedAdminIfNeeded() {
-  const email = process.env.ADMIN_EMAIL;
-  const password = process.env.ADMIN_PASSWORD;
-
-  if (!email || !password) {
-    throw new Error("ADMIN_EMAIL and ADMIN_PASSWORD must be set in environment.");
-  }
+  const email = process.env.ADMIN_EMAIL || "admin@hotel.com";
+  const password = process.env.ADMIN_PASSWORD || "Admin@123456";
 
   const normalizedEmail = email.trim().toLowerCase();
-  const existing = await prisma.admin.findFirst({
-    where: { email: { equals: normalizedEmail, mode: "insensitive" } },
+  const existing = await prisma.admin.findUnique({
+    where: { email: normalizedEmail },
   });
 
   if (existing) {

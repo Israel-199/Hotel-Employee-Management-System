@@ -3,13 +3,19 @@ import { prisma } from "./lib/prisma";
 import { seedAdminIfNeeded } from "./services/authService";
 
 async function main() {
+  console.log("Clearing existing data from database...");
+  await prisma.attendance.deleteMany();
+  await prisma.employee.deleteMany();
+  await prisma.shift.deleteMany();
+  await prisma.role.deleteMany();
+  await prisma.department.deleteMany();
+  console.log("Database cleared.");
+
   console.log("Starting database seeding...");
 
-  // 1. Seed Admin
   const admin = await seedAdminIfNeeded();
   console.log(`Admin user seeded: ${admin.email}`);
 
-  // 2. Seed Departments
   const departmentsData = [
     { name: "Front Office", description: "Guest relations, front desk, and reservations." },
     { name: "Housekeeping", description: "Cleaning, laundry, and room maintenance." },
@@ -29,7 +35,6 @@ async function main() {
   }
   console.log("Departments seeded.");
 
-  // 3. Seed Roles
   const rolesData = [
     { name: "Manager", description: "Department oversight and management." },
     { name: "Receptionist", description: "Guest check-in, check-out, and phone calls." },
@@ -51,18 +56,21 @@ async function main() {
   }
   console.log("Roles seeded.");
 
-  // 4. Seed Shifts
   const shiftsData = [
-    { name: "Morning", startTime: "07:00", endTime: "15:00", description: "Standard morning shift." },
-    { name: "Afternoon", startTime: "15:00", endTime: "23:00", description: "Evening shift." },
-    { name: "Night", startTime: "23:00", endTime: "07:00", description: "Overnight shift." },
+    { name: "Morning", startTime: "07:00AM", endTime: "03:00PM", description: "Standard morning shift." },
+    { name: "Afternoon", startTime: "03:00PM", endTime: "11:00PM", description: "Evening shift." },
+    { name: "Night", startTime: "11:00PM", endTime: "07:00AM", description: "Overnight shift." },
   ];
 
   const shiftsMap: Record<string, string> = {};
   for (const shift of shiftsData) {
     const existing = await prisma.shift.findFirst({ where: { name: shift.name } });
     if (existing) {
-      shiftsMap[shift.name] = existing.id;
+      const record = await prisma.shift.update({
+        where: { id: existing.id },
+        data: shift,
+      });
+      shiftsMap[shift.name] = record.id;
     } else {
       const record = await prisma.shift.create({ data: shift });
       shiftsMap[shift.name] = record.id;
@@ -70,14 +78,13 @@ async function main() {
   }
   console.log("Shifts seeded.");
 
-  // 5. Seed Employees
   const employeesData = [
     {
       employeeNumber: "EMP-1001",
       firstName: "John",
       lastName: "Doe",
       email: "john.doe@hotel.com",
-      phone: "+15550101",
+      phone: "+251911010101",
       hireDate: new Date("2024-01-15"),
       departmentId: departmentsMap["Front Office"],
       roleId: rolesMap["Manager"],
@@ -89,7 +96,7 @@ async function main() {
       firstName: "Alice",
       lastName: "Smith",
       email: "alice.smith@hotel.com",
-      phone: "+15550102",
+      phone: "+251911010102",
       hireDate: new Date("2024-02-01"),
       departmentId: departmentsMap["Front Office"],
       roleId: rolesMap["Receptionist"],
@@ -101,7 +108,7 @@ async function main() {
       firstName: "Robert",
       lastName: "Johnson",
       email: "robert.j@hotel.com",
-      phone: "+15550103",
+      phone: "+251911010103",
       hireDate: new Date("2024-02-15"),
       departmentId: departmentsMap["Housekeeping"],
       roleId: rolesMap["Housekeeper"],
@@ -113,7 +120,7 @@ async function main() {
       firstName: "Maria",
       lastName: "Garcia",
       email: "maria.g@hotel.com",
-      phone: "+15550104",
+      phone: "+251911010104",
       hireDate: new Date("2024-03-01"),
       departmentId: departmentsMap["Housekeeping"],
       roleId: rolesMap["Housekeeper"],
@@ -125,7 +132,7 @@ async function main() {
       firstName: "David",
       lastName: "Wilson",
       email: "david.w@hotel.com",
-      phone: "+15550105",
+      phone: "+251911010105",
       hireDate: new Date("2024-03-10"),
       departmentId: departmentsMap["Food & Beverage"],
       roleId: rolesMap["Chef"],
@@ -137,7 +144,7 @@ async function main() {
       firstName: "Emily",
       lastName: "Brown",
       email: "emily.b@hotel.com",
-      phone: "+15550106",
+      phone: "+251911010106",
       hireDate: new Date("2024-04-05"),
       departmentId: departmentsMap["Food & Beverage"],
       roleId: rolesMap["Waiter"],
@@ -149,7 +156,7 @@ async function main() {
       firstName: "Michael",
       lastName: "Taylor",
       email: "michael.t@hotel.com",
-      phone: "+15550107",
+      phone: "+251911010107",
       hireDate: new Date("2024-04-12"),
       departmentId: departmentsMap["Maintenance"],
       roleId: rolesMap["Maintenance Technician"],
@@ -161,7 +168,7 @@ async function main() {
       firstName: "Sarah",
       lastName: "Davis",
       email: "sarah.d@hotel.com",
-      phone: "+15550108",
+      phone: "+251911010108",
       hireDate: new Date("2024-05-01"),
       departmentId: departmentsMap["Human Resources"],
       roleId: rolesMap["HR Officer"],
@@ -190,7 +197,6 @@ async function main() {
   }
   console.log("Employees seeded.");
 
-  // 6. Seed Attendance over last 5 days including today
   const today = new Date();
   const statuses = ["PRESENT", "PRESENT", "PRESENT", "LATE", "ABSENT", "LEAVE"] as const;
 
@@ -210,10 +216,10 @@ async function main() {
       let notes: string | null = null;
 
       if (status === "PRESENT") {
-        checkIn = new Date(dateUTC.getTime() + 7 * 3600 * 1000); // 07:00
-        checkOut = new Date(dateUTC.getTime() + 15 * 3600 * 1000); // 15:00
+        checkIn = new Date(dateUTC.getTime() + 7 * 3600 * 1000);
+        checkOut = new Date(dateUTC.getTime() + 15 * 3600 * 1000);
       } else if (status === "LATE") {
-        checkIn = new Date(dateUTC.getTime() + 8 * 3600 * 1000 + 30 * 60 * 1000); // 08:30
+        checkIn = new Date(dateUTC.getTime() + 8 * 3600 * 1000 + 30 * 60 * 1000);
         checkOut = new Date(dateUTC.getTime() + 15 * 3600 * 1000);
         notes = "Traffic delay";
       } else if (status === "LEAVE") {

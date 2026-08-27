@@ -87,7 +87,8 @@ export async function updateAttendanceHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const updated = await updateAttendance(req.params.id as string, req.body);
+    const validatedData = attendanceSchema.partial().parse(req.body);
+    const updated = await updateAttendance(req.params.id as string, validatedData);
     res.status(200).json({
       success: true,
       data: updated,

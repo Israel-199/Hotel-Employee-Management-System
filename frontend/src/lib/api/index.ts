@@ -16,7 +16,6 @@ import {
 
 export * from "./types";
 
-// --- AUTH API ---
 export async function loginApi(email: string, password: string): Promise<ApiResponse<{ admin: Admin }>> {
   const response = await apiClient.post("/auth/login", { email, password });
   return response.data;
@@ -32,13 +31,11 @@ export async function logoutApi(): Promise<ApiResponse<null>> {
   return response.data;
 }
 
-// --- DASHBOARD API ---
 export async function getDashboardSummaryApi(): Promise<ApiResponse<DashboardSummary>> {
   const response = await apiClient.get("/dashboard/summary");
   return response.data;
 }
 
-// --- EMPLOYEES API ---
 export interface GetEmployeesParams {
   page?: number;
   limit?: number;
@@ -72,7 +69,6 @@ export async function deleteEmployeeApi(id: string): Promise<ApiResponse<null>> 
   return response.data;
 }
 
-// --- DEPARTMENTS API ---
 export async function getDepartmentsApi(): Promise<ApiResponse<Department[]>> {
   const response = await apiClient.get("/departments");
   return response.data;
@@ -93,7 +89,6 @@ export async function deleteDepartmentApi(id: string): Promise<ApiResponse<null>
   return response.data;
 }
 
-// --- ROLES API ---
 export async function getRolesApi(): Promise<ApiResponse<Role[]>> {
   const response = await apiClient.get("/roles");
   return response.data;
@@ -114,7 +109,6 @@ export async function deleteRoleApi(id: string): Promise<ApiResponse<null>> {
   return response.data;
 }
 
-// --- SHIFTS API ---
 export async function getShiftsApi(): Promise<ApiResponse<Shift[]>> {
   const response = await apiClient.get("/shifts");
   return response.data;
@@ -135,7 +129,6 @@ export async function deleteShiftApi(id: string): Promise<ApiResponse<null>> {
   return response.data;
 }
 
-// --- ATTENDANCE API ---
 export interface GetAttendanceParams {
   page?: number;
   limit?: number;
@@ -164,7 +157,6 @@ export async function deleteAttendanceApi(id: string): Promise<ApiResponse<null>
   return response.data;
 }
 
-// --- REPORTS API ---
 export interface ReportFilterParams {
   startDate?: string;
   endDate?: string;

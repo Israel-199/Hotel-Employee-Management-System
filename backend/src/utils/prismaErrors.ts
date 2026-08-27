@@ -46,9 +46,11 @@ export function parseDateOnly(value: string): Date {
   return new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
 }
 
+const ETHIOPIA_OFFSET_MS = 3 * 60 * 60 * 1000;
+
 export function startOfTodayUTC(): Date {
-  const now = new Date();
-  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+  const eatNow = new Date(Date.now() + ETHIOPIA_OFFSET_MS);
+  return new Date(Date.UTC(eatNow.getUTCFullYear(), eatNow.getUTCMonth(), eatNow.getUTCDate()) - ETHIOPIA_OFFSET_MS);
 }
 
 export function endOfTodayUTC(): Date {

@@ -95,7 +95,32 @@ export async function updateAttendance(
     notes: string | null;
   }>
 ) {
-  await getAttendanceById(id);
+  const existing = await prisma.attendance.findUnique({ where: { id } });
+  if (!existing) throw new AppError("Attendance record not found.", 404);
+
+  let hasChanges = false;
+  if (data.employeeId !== undefined && data.employeeId !== existing.employeeId) hasChanges = true;
+  if (data.status !== undefined && data.status !== existing.status) hasChanges = true;
+  if (data.notes !== undefined && (data.notes ?? null) !== (existing.notes ?? null)) hasChanges = true;
+  if (data.date !== undefined) {
+    const newDate = parseDateOnly(data.date).toISOString();
+    const oldDate = existing.date.toISOString();
+    if (newDate !== oldDate) hasChanges = true;
+  }
+  if (data.checkIn !== undefined) {
+    const newCheckIn = data.checkIn ? parseDateTime(data.checkIn)?.toISOString() ?? null : null;
+    const oldCheckIn = existing.checkIn?.toISOString() ?? null;
+    if (newCheckIn !== oldCheckIn) hasChanges = true;
+  }
+  if (data.checkOut !== undefined) {
+    const newCheckOut = data.checkOut ? parseDateTime(data.checkOut)?.toISOString() ?? null : null;
+    const oldCheckOut = existing.checkOut?.toISOString() ?? null;
+    if (newCheckOut !== oldCheckOut) hasChanges = true;
+  }
+
+  if (!hasChanges) {
+    throw new AppError("No changes were made.", 400);
+  }
 
   if (data.employeeId) {
     const employee = await prisma.employee.findUnique({ where: { id: data.employeeId } });
@@ -118,6 +143,7 @@ export async function updateAttendance(
 }
 
 export async function deleteAttendance(id: string) {
-  await getAttendanceById(id);
+  const existing = await prisma.attendance.findUnique({ where: { id } });
+  if (!existing) throw new AppError("Attendance record not found.", 404);
   await prisma.attendance.delete({ where: { id } });
 }

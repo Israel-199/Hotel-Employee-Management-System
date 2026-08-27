@@ -63,7 +63,8 @@ export async function updateDepartmentHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const updated = await updateDepartment(req.params.id as string, req.body);
+    const validatedData = departmentSchema.partial().parse(req.body);
+    const updated = await updateDepartment(req.params.id as string, validatedData);
     res.status(200).json({
       success: true,
       data: updated,

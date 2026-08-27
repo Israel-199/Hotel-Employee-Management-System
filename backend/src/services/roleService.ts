@@ -40,14 +40,28 @@ export async function updateRole(
   id: string,
   data: { name?: string; description?: string | null }
 ) {
-  await getRoleById(id);
+  const existing = await prisma.role.findUnique({ where: { id } });
+  if (!existing) throw new AppError("Role not found.", 404);
+
+  let hasChanges = false;
+  if (data.name !== undefined && data.name !== existing.name) hasChanges = true;
+  if (
+    data.description !== undefined &&
+    (data.description ?? null) !== (existing.description ?? null)
+  ) {
+    hasChanges = true;
+  }
+
+  if (!hasChanges) {
+    throw new AppError("No changes were made.", 400);
+  }
+
   return prisma.role.update({ where: { id }, data });
 }
 
 export async function deleteRole(id: string) {
-  await getRoleById(id);
-  const count = await prisma.employee.count({ where: { roleId: id } });
-  if (count > 0) {
+  const role = await getRoleById(id);
+  if (role.employeeCount > 0) {
     throw new AppError("Cannot delete role with assigned employees.", 409);
   }
   await prisma.role.delete({ where: { id } });

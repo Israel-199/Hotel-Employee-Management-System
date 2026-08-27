@@ -87,7 +87,8 @@ export async function updateEmployeeHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const updated = await updateEmployee(req.params.id as string, req.body);
+    const validatedData = employeeSchema.partial().parse(req.body);
+    const updated = await updateEmployee(req.params.id as string, validatedData);
     res.status(200).json({
       success: true,
       data: updated,

@@ -63,7 +63,8 @@ export async function updateRoleHandler(
   next: NextFunction
 ): Promise<void> {
   try {
-    const updated = await updateRole(req.params.id as string, req.body);
+    const validatedData = roleSchema.partial().parse(req.body);
+    const updated = await updateRole(req.params.id as string, validatedData);
     res.status(200).json({
       success: true,
       data: updated,

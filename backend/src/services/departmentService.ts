@@ -40,14 +40,28 @@ export async function updateDepartment(
   id: string,
   data: { name?: string; description?: string | null }
 ) {
-  await getDepartmentById(id);
+  const existing = await prisma.department.findUnique({ where: { id } });
+  if (!existing) throw new AppError("Department not found.", 404);
+
+  let hasChanges = false;
+  if (data.name !== undefined && data.name !== existing.name) hasChanges = true;
+  if (
+    data.description !== undefined &&
+    (data.description ?? null) !== (existing.description ?? null)
+  ) {
+    hasChanges = true;
+  }
+
+  if (!hasChanges) {
+    throw new AppError("No changes were made.", 400);
+  }
+
   return prisma.department.update({ where: { id }, data });
 }
 
 export async function deleteDepartment(id: string) {
-  await getDepartmentById(id);
-  const count = await prisma.employee.count({ where: { departmentId: id } });
-  if (count > 0) {
+  const department = await getDepartmentById(id);
+  if (department.employeeCount > 0) {
     throw new AppError("Cannot delete department with assigned employees.", 409);
   }
   await prisma.department.delete({ where: { id } });

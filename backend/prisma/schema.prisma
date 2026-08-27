@@ -77,8 +77,6 @@ model Employee {
   shift      Shift        @relation(fields: [shiftId], references: [id], onDelete: Restrict)
   attendance Attendance[]
 
-  @@index([employeeNumber])
-  @@index([email])
   @@index([departmentId])
   @@index([roleId])
   @@index([shiftId])

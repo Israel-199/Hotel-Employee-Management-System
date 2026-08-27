@@ -107,14 +107,34 @@ export async function updateEmployee(
     status: EmployeeStatus;
   }>
 ) {
-  await getEmployeeById(id);
+  const existing = await prisma.employee.findUnique({ where: { id } });
+  if (!existing) throw new AppError("Employee not found.", 404);
+
+  let hasChanges = false;
+  if (data.employeeNumber !== undefined && data.employeeNumber !== existing.employeeNumber) hasChanges = true;
+  if (data.firstName !== undefined && data.firstName !== existing.firstName) hasChanges = true;
+  if (data.lastName !== undefined && data.lastName !== existing.lastName) hasChanges = true;
+  if (data.email !== undefined && data.email.trim().toLowerCase() !== existing.email.trim().toLowerCase()) hasChanges = true;
+  if (data.phone !== undefined && (data.phone ?? null) !== (existing.phone ?? null)) hasChanges = true;
+  if (data.departmentId !== undefined && data.departmentId !== existing.departmentId) hasChanges = true;
+  if (data.roleId !== undefined && data.roleId !== existing.roleId) hasChanges = true;
+  if (data.shiftId !== undefined && data.shiftId !== existing.shiftId) hasChanges = true;
+  if (data.status !== undefined && data.status !== existing.status) hasChanges = true;
+  if (data.hireDate !== undefined) {
+    const newHireDate = parseDateOnly(data.hireDate).toISOString();
+    const oldHireDate = existing.hireDate.toISOString();
+    if (newHireDate !== oldHireDate) hasChanges = true;
+  }
+
+  if (!hasChanges) {
+    throw new AppError("No changes were made.", 400);
+  }
 
   if (data.departmentId || data.roleId || data.shiftId) {
-    const existing = await prisma.employee.findUnique({ where: { id } });
     await validateEmployeeRelations(
-      data.departmentId || existing!.departmentId,
-      data.roleId || existing!.roleId,
-      data.shiftId || existing!.shiftId
+      data.departmentId || existing.departmentId,
+      data.roleId || existing.roleId,
+      data.shiftId || existing.shiftId
     );
   }
 
@@ -131,6 +151,7 @@ export async function updateEmployee(
 }
 
 export async function deleteEmployee(id: string) {
-  await getEmployeeById(id);
+  const existing = await prisma.employee.findUnique({ where: { id } });
+  if (!existing) throw new AppError("Employee not found.", 404);
   await prisma.employee.delete({ where: { id } });
 }

@@ -10,7 +10,7 @@ export function errorHandler(
   _next: NextFunction
 ): void {
   if (err instanceof ZodError) {
-    const message = err.errors.map((e) => e.message).join(", ");
+    const message = err.issues.map((e: { message: string }) => e.message).join(", ");
     res.status(400).json({ success: false, message });
     return;
   }

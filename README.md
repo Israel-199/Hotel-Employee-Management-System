@@ -195,7 +195,7 @@ All API error responses follow a uniform JSON structure:
    This is intentionally provided to make it easier for the evaluator to run and test the system without creating the environment variables manually.
    
    ```env
-   DATABASE_URL="postgresql://neondb_owner:npg_PksWJdND1L5K@ep-winter-sky-aylq1mjg-pooler.c-5.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+   DATABASE_URL="YOUR_DATABASE_URL"
    PORT=5000
    ADMIN_EMAIL="admin@test.com"
    ADMIN_PASSWORD="AssessmentPassword123!"

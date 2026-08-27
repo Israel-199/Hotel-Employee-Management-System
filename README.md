@@ -174,6 +174,11 @@ All API error responses follow a uniform JSON structure:
 
 1. **Navigate to the backend directory**:
    ```bash
+   cd Hotel-Employee-Management-System-main
+   ```
+   Then
+
+   ```bash
    cd backend
    ```
 
@@ -191,6 +196,11 @@ All API error responses follow a uniform JSON structure:
    ADMIN_PASSWORD="AssessmentPassword123!"
    JWT_SECRET="assessment-secret"
    CLIENT_ORIGIN="http://localhost:3000"
+   ```
+
+4. **Generate Prisma Client**:
+   ```bash
+   npx prisma generate
    ```
 
 4. **Sync database schema with Prisma**:

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useCallback} from "react";
 import {
   getShiftsApi,
   createShiftApi,
@@ -27,21 +27,26 @@ export default function ShiftsPage() {
 
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const fetchShifts = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const res = await getShiftsApi();
-      if (res.success) {
-        setShifts(res.data);
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError("Failed to fetch shifts.");
-    } finally {
-      setLoading(false);
+  const fetchShifts = useCallback(async () => {
+  try {
+    setLoading(true);
+    setError(null);
+
+    const res = await getShiftsApi();
+
+    if (res.success) {
+      setShifts(res.data);
     }
-  };
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      setError(err.message);
+    } else {
+      setError("Failed to fetch shifts.");
+    }
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
   useEffect(() => {
     fetchShifts();

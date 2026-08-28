@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState ,useCallback} from "react";
 import {
   getRolesApi,
   createRoleApi,
@@ -25,21 +25,26 @@ export default function RolesPage() {
 
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const fetchRoles = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const res = await getRolesApi();
-      if (res.success) {
-        setRoles(res.data);
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError("Failed to fetch roles.");
-    } finally {
-      setLoading(false);
+  const fetchRoles = useCallback(async () => {
+  try {
+    setLoading(true);
+    setError(null);
+
+    const res = await getRolesApi();
+
+    if (res.success) {
+      setRoles(res.data);
     }
-  };
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      setError(err.message);
+    } else {
+      setError("Failed to fetch roles.");
+    }
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
   useEffect(() => {
     fetchRoles();

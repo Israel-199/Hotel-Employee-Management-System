@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useCallback } from "react";
 import {
   getDepartmentsApi,
   createDepartmentApi,
@@ -25,21 +25,26 @@ export default function DepartmentsPage() {
 
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
-  const fetchDepartments = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const res = await getDepartmentsApi();
-      if (res.success) {
-        setDepartments(res.data);
-      }
-    } catch (err: unknown) {
-      if (err instanceof Error) setError(err.message);
-      else setError("Failed to fetch departments.");
-    } finally {
-      setLoading(false);
+  const fetchDepartments = useCallback(async () => {
+  try {
+    setLoading(true);
+    setError(null);
+
+    const res = await getDepartmentsApi();
+
+    if (res.success) {
+      setDepartments(res.data);
     }
-  };
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      setError(err.message);
+    } else {
+      setError("Failed to fetch departments.");
+    }
+  } finally {
+    setLoading(false);
+  }
+}, []);
 
   useEffect(() => {
     fetchDepartments();

@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const timeRegex = /^(?:(?:0?[1-9]|1[0-2]):[0-5][0-9]\s?(?:AM|PM|am|pm)|(?:[01]\d|2[0-3]):[0-5]\d)$/;
-const nameRegex = /^[a-zA-Z0-9\s\-\.'&(),/]+$/;
+const nameRegex = /^[a-zA-Z\s\-\.'&(),/]+$/;
 const phoneRegex = /^(?:\+251|0)[79]\d{8}$/;
 
 const nameSchema = (field: string) =>
